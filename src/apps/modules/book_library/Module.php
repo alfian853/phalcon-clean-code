@@ -1,6 +1,11 @@
 <?php
 namespace App\BookLibrary;
+use App\BookLibrary\Commands\AddAuthorCommand;
 use App\BookLibrary\Commands\AddBookCommand;
+use App\BookLibrary\Commands\GetAuthorCommand;
+use App\BookLibrary\Commands\GetBookCommand;
+use App\BookLibrary\Repositories\AuthorRepository;
+use App\BookLibrary\Repositories\BookRepository;
 use Phalcon\DiInterface;
 use Phalcon\Loader;
 use Phalcon\Mvc\ModuleDefinitionInterface;
@@ -20,6 +25,9 @@ class Module implements ModuleDefinitionInterface
             'App\BookLibrary\Controllers\Api' => __DIR__ . '/controllers/api',
             'App\BookLibrary\Controllers\Common' => __DIR__ . '/controllers/common',
             'App\BookLibrary\Commands' => __DIR__ . '/commands',
+            'App\BookLibrary\Models' => __DIR__ . '/models',
+            'App\BookLibrary\Repositories' => __DIR__ . '/repository',
+            'App\BookLibrary\Request' => __DIR__ . '/request',
         ]);
         $loader->register();
 
@@ -28,7 +36,23 @@ class Module implements ModuleDefinitionInterface
 
     private function registerCommands(DiInterface $di){
         $commandContainer = $di->get('commands');
-        $commandContainer->add(AddBookCommand::class);
+        $bookRepository = new BookRepository();
+        $authorRepository = new AuthorRepository();
+
+        $commandContainer->add(new AddAuthorCommand($authorRepository));
+        $commandContainer->add(new AddBookCommand($bookRepository));
+        $commandContainer->add(new GetAuthorCommand($authorRepository));
+        $commandContainer->add(new GetBookCommand($bookRepository));
+
+        //autoload command jika tidak pakai contructor dependency injection
+//        $files = array_diff(scandir(__DIR__ . "/commands/"), array('..', '.'));
+//        foreach ($files as $file) {
+//            if(substr($file,-11) == 'CommandInterface.php'){
+//                $commandContainer->add(
+//                    'App\\BookLibrary\\Commands\\' . substr($file,0,strlen($file)-4)
+//                );
+//            }
+//        }
     }
 
     /**

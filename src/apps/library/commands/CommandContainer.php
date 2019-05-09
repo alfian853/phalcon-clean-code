@@ -2,7 +2,7 @@
 
 namespace App\Library\Commands;
 
-class CommandContainer implements Container{
+class CommandContainer {
 
     private $container;
 
@@ -14,13 +14,15 @@ class CommandContainer implements Container{
     /**
      * Return a new instance of an object
      *
-     * @param string $class
+     * @param Command $command
      * @return mixed
      */
-    public function add($class)
+    public function add($command)
     {
         // TODO: Implement add() method.
-        $this->container[$class] = new $class;
+//        $this->container[$class] = new $class;
+        $this->container[get_class($command)] = $command;
+
     }
 
     /**

@@ -215,6 +215,5 @@ $di->setShared('oauth2Server',function () use ($config){
 
 $di->setShared('commands', function (){
     $container = new \App\Library\Commands\CommandContainer();
-//    $container->add(\App\Library\Commands\AddBookCommand::class);
     return $container;
 });

@@ -1,34 +1,32 @@
 <?php
+
 namespace App\BookLibrary\Controllers\Api;
 
-use App\BookLibrary\Commands\AddBookCommand;
-use App\BookLibrary\Commands\GetBookCommand;
-use App\BookLibrary\Request\AddBookRequest;
-use Phalcon\Http\Request;
+
+use App\BookLibrary\Commands\AddAuthorCommand;
+use App\BookLibrary\Commands\GetAuthorCommand;
+use App\BookLibrary\Request\AddAuthorRequest;
 use Phalcon\Mvc\Controller;
 
 /**
- * Class BookController
+ * Class AuthorController
  * @property \App\Library\Commands\Container commands injected into DI
  */
-class BookController extends Controller
+class AuthorController extends Controller
 {
-
-    public function indexAction() {
+    public function indexAction(){
         $request = $this->request;
         $response = $this->response;
         $response->setContentType('application/json');
-
         switch ($request->getMethod()){
             case 'POST':
                 $jsonBody = $request->getJsonRawBody();
-                $addBookReq = new AddBookRequest();
-                $addBookReq->setAuthorId($jsonBody->author_id);
-                $addBookReq->setIsbn($jsonBody->isbn);
-                $addBookReq->setTitle($jsonBody->title);
+                $addAuthorReq = new AddAuthorRequest();
+                $addAuthorReq->setName($jsonBody->name);
+                $addAuthorReq->setEmail($jsonBody->email);
                 $response->setContent(json_encode([
-                        'success' => $this->commands->get(AddBookCommand::class)
-                            ->execute($addBookReq)
+                        'success' => $this->commands->get(AddAuthorCommand::class)
+                                    ->execute($addAuthorReq)
                     ])
                 );
                 $response->send();
@@ -36,13 +34,12 @@ class BookController extends Controller
             case 'GET':
                 $response->setContent(
                     json_encode(
-                        $this->commands->get(GetBookCommand::class)
+                        $this->commands->get(GetAuthorCommand::class)
                             ->execute()
                     )
                 );
                 $response->send();
         }
     }
-
 
 }
