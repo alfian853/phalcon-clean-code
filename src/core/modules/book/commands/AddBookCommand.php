@@ -1,9 +1,10 @@
 <?php
 
-namespace App\BookLibrary\Commands;
-use App\BookLibrary\Request\AddBookRequest;
-use App\Library\Commands\CommandInterface;
-use App\Library\Orm\RepositoryInterface;
+namespace Core\Modules\Book\Commands;
+
+use Core\Modules\Book\Requests\AddBookRequest;
+use Core\Library\Commands\CommandInterface;
+use Core\Library\Repositories\RepositoryInterface;
 
 class AddBookCommand implements CommandInterface
 {

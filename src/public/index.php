@@ -9,6 +9,7 @@ mb_internal_encoding('UTF-8');
 setlocale(LC_TIME, 'id-ID');
 
 define('BASE_PATH', dirname(__DIR__));
+define('CORE_PATH', BASE_PATH . '/core');
 define('APP_PATH', BASE_PATH . '/apps');
 
 date_default_timezone_set('Asia/Jakarta');

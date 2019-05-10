@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Commands;
+namespace Core\Library\Commands;
 
 class CommandContainer {
 

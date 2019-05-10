@@ -1,10 +1,9 @@
 <?php
 
-namespace App\BookLibrary\Commands;
+namespace Core\Modules\Book\Commands;
 
-
-use App\Library\Commands\CommandInterface;
-use App\Library\Orm\RepositoryInterface;
+use Core\Library\Commands\CommandInterface;
+use Core\Library\Repositories\RepositoryInterface;
 
 class GetBookCommand implements CommandInterface {
 

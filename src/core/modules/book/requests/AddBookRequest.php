@@ -1,5 +1,5 @@
 <?php
-namespace App\BookLibrary\Request;
+namespace Core\Modules\Book\Requests;
 
 class AddBookRequest
 {

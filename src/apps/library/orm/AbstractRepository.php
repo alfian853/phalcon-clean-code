@@ -2,6 +2,7 @@
 
 namespace App\Library\Orm;
 
+use Core\Library\Repositories\RepositoryInterface;
 use Phalcon\Config;
 use Phalcon\Di;
 use Phalcon\Http\Request;

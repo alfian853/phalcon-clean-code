@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Orm;
+namespace Core\Library\Repositories;
 
 interface RepositoryInterface
 {

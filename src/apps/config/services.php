@@ -2,6 +2,7 @@
 
 use App\Oauth\Repository\AuthCodeRepository;
 use App\Oauth\Repository\RefreshTokenRepository;
+use Core\Library\Commands\CommandContainer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use Phalcon\Http\Response;
@@ -214,6 +215,6 @@ $di->setShared('oauth2Server',function () use ($config){
 
 
 $di->setShared('commands', function (){
-    $container = new \App\Library\Commands\CommandContainer();
+    $container = new CommandContainer();
     return $container;
 });

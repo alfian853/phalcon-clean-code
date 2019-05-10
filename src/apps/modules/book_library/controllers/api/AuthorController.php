@@ -2,15 +2,15 @@
 
 namespace App\BookLibrary\Controllers\Api;
 
-
-use App\BookLibrary\Commands\AddAuthorCommand;
-use App\BookLibrary\Commands\GetAuthorCommand;
-use App\BookLibrary\Request\AddAuthorRequest;
+use Core\Library\Commands\CommandContainer;
+use Core\Modules\Author\Commands\GetAuthorCommand;
+use Core\Modules\Author\Requests\AddAuthorRequest;
+use Core\Modules\Book\Commands\AddAuthorCommand;
 use Phalcon\Mvc\Controller;
 
 /**
  * Class AuthorController
- * @property \App\Library\Commands\Container commands injected into DI
+ * @property CommandContainer commands injected into DI
  */
 class AuthorController extends Controller
 {

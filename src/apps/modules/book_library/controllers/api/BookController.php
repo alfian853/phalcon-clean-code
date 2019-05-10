@@ -1,15 +1,15 @@
 <?php
 namespace App\BookLibrary\Controllers\Api;
 
-use App\BookLibrary\Commands\AddBookCommand;
-use App\BookLibrary\Commands\GetBookCommand;
-use App\BookLibrary\Request\AddBookRequest;
-use Phalcon\Http\Request;
+use Core\Library\Commands\CommandContainer;
+use Core\Modules\Book\Commands\AddBookCommand;
+use Core\Modules\Book\Commands\GetBookCommand;
+use Core\Modules\Book\Requests\AddBookRequest;
 use Phalcon\Mvc\Controller;
 
 /**
  * Class BookController
- * @property \App\Library\Commands\Container commands injected into DI
+ * @property CommandContainer commands injected into DI
  */
 class BookController extends Controller
 {

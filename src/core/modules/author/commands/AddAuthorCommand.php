@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BookLibrary\Commands;
+namespace Core\Modules\Author\Commands;
 
-use App\BookLibrary\Request\AddAuthorRequest;
-use App\Library\Commands\CommandInterface;
-use App\Library\Orm\RepositoryInterface;
+use Core\Modules\Author\Requests\AddAuthorRequest;
+use Core\Library\Commands\CommandInterface;
+use Core\Library\Repositories\RepositoryInterface;
 
 class AddAuthorCommand implements CommandInterface {
 
