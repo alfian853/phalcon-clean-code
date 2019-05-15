@@ -8,7 +8,7 @@ class DashboardController extends Controller
 {
     public function indexAction()
     {
-        return $this->view->pick('dashboard/index');
+        return $this->view->pick('table.volt/index');
     }
 
 

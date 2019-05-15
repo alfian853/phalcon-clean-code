@@ -13,7 +13,7 @@ use Phalcon\Http\Response;
 use Phalcon\Mvc\Controller;
 
 /**
- * Class BookController
+ * Class InventoryController
  * @property \League\OAuth2\Server\AuthorizationServer oauth2Server injected into DI
  * @package App\Controllers
  */

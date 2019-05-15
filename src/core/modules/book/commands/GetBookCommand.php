@@ -3,7 +3,7 @@
 namespace Core\Modules\Book\Commands;
 
 use Core\Library\Commands\CommandInterface;
-use Core\Library\Repositories\RepositoryInterface;
+use Core\Library\DataTables\RepositoryInterface;
 
 class GetBookCommand implements CommandInterface {
 

@@ -4,7 +4,7 @@ namespace Core\Modules\Book\Commands;
 
 use Core\Modules\Book\Requests\AddBookRequest;
 use Core\Library\Commands\CommandInterface;
-use Core\Library\Repositories\RepositoryInterface;
+use Core\Library\DataTables\RepositoryInterface;
 
 class AddBookCommand implements CommandInterface
 {

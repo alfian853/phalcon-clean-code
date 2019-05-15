@@ -19,13 +19,16 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
 
-    <link rel="stylesheet" type="text/css" href="assets/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/table.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.foundation.min.css">
 
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.foundation.min.js"></script>
 
     <script src="/assets/js/DataTablesAccess.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.foundation.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
 
     <style>
         .dataTables_filter, .dataTables_info { display: none; }
@@ -50,9 +53,19 @@
                 serverSide : true,
                 ajax : {
                     'type' : 'GET',
-                    'url' : '/inventory/datatables',
+                    'url' : '/inventory/api/inventory/data',
                     'dataSrc' : function (response) {
-                        return response.data;
+                        let len = response.data.length;
+                        let ref = response.data;
+                        for(let i = 0; i<len; i++){
+                            ref[i]['action'] =
+                                '<button class="submit btn btn-success" type="submit" onclick="loadInventoryDetail('+ref[i].id+')">Detail</button>' +
+                                '<button class="submit btn btn-danger" style="background-color: #BB281A;" type="submit" onclick="deleteInventory('+ref[i].id+')">' +
+                                '<i class="fas fa-trash"></i>' +
+                                '</button>'
+
+                        }
+                        return ref;
                     }
                 },
                 columns : preparedCol.column,

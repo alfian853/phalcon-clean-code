@@ -8,7 +8,7 @@ use Core\Modules\Book\Requests\AddBookRequest;
 use Phalcon\Mvc\Controller;
 
 /**
- * Class BookController
+ * Class InventoryController
  * @property CommandContainer commands injected into DI
  */
 class BookController extends Controller

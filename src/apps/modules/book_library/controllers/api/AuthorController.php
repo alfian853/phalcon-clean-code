@@ -5,7 +5,7 @@ namespace App\BookLibrary\Controllers\Api;
 use Core\Library\Commands\CommandContainer;
 use Core\Modules\Author\Commands\GetAuthorCommand;
 use Core\Modules\Author\Requests\AddAuthorRequest;
-use Core\Modules\Book\Commands\AddAuthorCommand;
+use Core\Modules\Author\Commands\AddAuthorCommand;
 use Phalcon\Mvc\Controller;
 
 /**

@@ -1,8 +1,10 @@
 <?php
 
+use App\Inventory\Repositories\InventoryRepository;
 use App\Oauth\Repository\AuthCodeRepository;
 use App\Oauth\Repository\RefreshTokenRepository;
 use Core\Library\Commands\CommandContainer;
+use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use Phalcon\Http\Response;
@@ -158,6 +160,9 @@ $di->setShared('db', function() use ($di) {
     if ($type == 'Phalcon\Db\Adapter\Pdo\Mysql') {
         $connection =  new \Phalcon\Db\Adapter\Pdo\Mysql($creds);
     }
+    else if($type == 'Phalcon\Db\Adapter\Pdo\Postgresql'){
+        $connection =  new \Phalcon\Db\Adapter\Pdo\Postgresql($creds);
+    }
     else {
         throw new Exception('Bad Database Adapter');
     }
@@ -216,5 +221,6 @@ $di->setShared('oauth2Server',function () use ($config){
 
 $di->setShared('commands', function (){
     $container = new CommandContainer();
+    $container->add(new GetInventoryTableCommand(new InventoryRepository()));
     return $container;
 });
