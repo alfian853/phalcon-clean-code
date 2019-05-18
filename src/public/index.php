@@ -18,6 +18,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 require_once APP_PATH . '/Bootstrap.php';
 
-$app = new Bootstrap('book_library');
+$app = new Bootstrap('inventory');
 
 $app->init();

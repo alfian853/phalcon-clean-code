@@ -2,14 +2,12 @@
 /**
  * Created by PhpStorm.
  * User: falnerz
- * Date: 5/15/19
- * Time: 1:28 AM
+ * Date: 5/18/19
+ * Time: 2:56 AM
  */
+namespace Core\Modules\Inventory\Requests;
 
-namespace Core\Modules\Inventory\Entities;
-
-
-class Inventory
+class InventoryRequest
 {
     private
         $id,
@@ -18,10 +16,7 @@ class Inventory
         $price,
         $description,
         $type,
-        $category;
-
-
-
+        $category_id;
 
     /**
      * @return mixed
@@ -66,7 +61,7 @@ class Inventory
     /**
      * @param mixed $quantity
      */
-    public function setQuantity(int $quantity)
+    public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
     }
@@ -82,7 +77,7 @@ class Inventory
     /**
      * @param mixed $price
      */
-    public function setPrice(int $price)
+    public function setPrice($price)
     {
         $this->price = $price;
     }
@@ -120,19 +115,19 @@ class Inventory
     }
 
     /**
-     * @return Category
+     * @return mixed
      */
-    public function getCategory()
+    public function getCategoryId()
     {
-        return $this->category;
+        return $this->category_id;
     }
 
     /**
-     * @param Category $category
+     * @param mixed $category_id
      */
-    public function setCategory(Category $category = null)
+    public function setCategoryId($category_id)
     {
-        $this->category = $category;
+        $this->category_id = $category_id;
     }
 
 

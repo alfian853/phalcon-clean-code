@@ -13,12 +13,12 @@ $loader->registerNamespaces(array(
     'Core\Library\Commands' => CORE_PATH . '/library/commands',
     'Core\Library\DataTables' => CORE_PATH . '/library/datatables',
     'Core\Library\Repositories' => CORE_PATH . '/library/repositories',
-    'Core\Modules\Author\Commands' => CORE_PATH . '/modules/author/commands',
-    'Core\Modules\Author\Requests' => CORE_PATH . '/modules/author/requests',
-    'Core\Modules\Book\Commands' => CORE_PATH . '/modules/book/commands',
-    'Core\Modules\Book\Requests' => CORE_PATH . '/modules/book/requests',
+    'Core\Library\Requests' => CORE_PATH . '/library/requests',
     'Core\Modules\Inventory\Commands' => CORE_PATH . '/modules/inventory/commands',
-    'Core\Modules\Inventory\Entities' => CORE_PATH . '/modules/inventory/entities'
+    'Core\Modules\Inventory\Entities' => CORE_PATH . '/modules/inventory/entities',
+    'Core\Modules\Inventory\Orm' => CORE_PATH . '/modules/inventory/orm',
+    'Core\Modules\Inventory\Requests' => CORE_PATH . '/modules/inventory/requests',
+    'Core\Modules\Inventory\Services' => CORE_PATH . '/modules/inventory/services',
 ));
 
 

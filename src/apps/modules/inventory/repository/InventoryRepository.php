@@ -1,19 +1,21 @@
 <?php
 namespace App\Inventory\Repositories;
 
+use App\Inventory\Mappers\InventoryMapper;
 use App\Inventory\Models\Category;
 use App\Inventory\Models\Inventory;
+use App\Inventory\Traits\CriteriaQueryTrait;
 use App\Library\Orm\AbstractRepository;
-use Core\Library\DataTablesResponse;
-use Core\Library\DataTables\Criteria;
-use Core\Library\DataTables\DataTablesRepositoryInterface;
-use Core\Library\DataTables\SearchCriteria;
+use Core\Library\Repositories\Criteria;
+use Core\Modules\Inventory\Entities\Inventory as CoreInventory;
+use Core\Modules\Inventory\Orm\InventoryRepository as InventoryCoreRepository;
+use Core\Modules\Inventory\Orm\InventoryPaginationResult;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Paginator\Factory;
 
-class InventoryRepository extends AbstractRepository implements DataTablesRepositoryInterface
+class InventoryRepository extends AbstractRepository implements InventoryCoreRepository
 {
 
+    use CriteriaQueryTrait;
     /**
      * Model class name for the concrete implementation
      *
@@ -24,63 +26,60 @@ class InventoryRepository extends AbstractRepository implements DataTablesReposi
         return Inventory::class;
     }
 
-    private function getFieldFromColumn($field){
-        $strings = explode('.',$field);
-        if(count($strings) == 1){
-            return Inventory::class.'.'.$field;
-        }
-        switch ($strings[0]){
-            case 'categories':
-                return Category::class.'.'.$strings[1];
-                break;
-            case 'inventories':
-                return Inventory::class.'.'.$strings[1];
-                break;
-        }
-        throw new \Phalcon\Exception('bad request',400);
-    }
 
-    function mapResponse($item){
-        return [
-            'id' => $item->id,
-            'name' => $item->name,
-            'category' => $item->category->name,
-            'price' => $item->price,
-            'quantity' => $item->quantity,
-            'type' => $item->type
-        ];
-    }
-
-    function findByDataTablesRequest(Criteria $criteria)
+    function findByCriteria(Criteria $criteria) : InventoryPaginationResult
     {
         /** @var Builder $builder */
         $builder = $this->getQueryBuilder();
         $builder->join(Category::class,Category::class.'.id = category_id');
 
-        /** @var SearchCriteria $search */
-        foreach ($criteria->search_list as $search){
-            $field = $this->getFieldFromColumn($search->field);
-            $builder->andWhere('cast('.$field.' as TEXT) like \'%'.$search->data.'%\'');
-        }
-        $builder->orderBy($this->getFieldFromColumn($criteria->orderBy).' '.$criteria->orderDir);
-        $options =
-            [
-                'builder'  => $builder,
-                'limit' => $criteria->length,
-                'page'  => $criteria->page,
-                'adapter' => 'queryBuilder'
-            ];
-        $paginate = Factory::load($options)->getPaginate();
+        $paginate = $this->getPaginate($builder, $criteria);
         $items = $paginate->items;
-        $res = [];
+        $result = new InventoryPaginationResult();
         foreach ($items as $item){
-            array_push($res, $this->mapResponse($item));
+            $result->addToList(InventoryMapper::mapping($item));
         }
-        $result = new DataTablesResponse();
-        $result->recordsFiltered =  $paginate->total_pages*$criteria->length;
-        $result->recordsTotal = $paginate->total_pages * $criteria->length;
-        $result->data = $res;
-
+        $result->setRecordsTotal($paginate->total_pages*$criteria->getLength());
+        $result->setRecordsFiltered( $paginate->total_pages*$criteria->getLength());
         return $result;
+    }
+
+    function createInventory(CoreInventory $inventory) : CoreInventory
+    {
+        $res = $this->create([
+            'name' => $inventory->getName(),
+            'price' => $inventory->getPrice(),
+            'quantity' => $inventory->getQuantity(),
+            'type' => $inventory->getType(),
+            'category_id' => $inventory->getCategory()->getId(),
+            'description' => $inventory->getDescription()
+        ]);
+        $inventory->setId($this->model->id);
+        return $inventory;
+    }
+
+    function updateInventory(CoreInventory $inventory) : bool
+    {
+        return $this->update([
+            'id' => $inventory->getId()],
+            [
+                'name' => $inventory->getName(),
+                'price' => $inventory->getPrice(),
+                'quantity' => $inventory->getQuantity(),
+                'type' => $inventory->getType(),
+                'category_id' => $inventory->getCategory()->getId()
+            ]
+        ) instanceof Inventory;
+    }
+
+
+    function findById(int $inventoryId): CoreInventory
+    {
+        return InventoryMapper::mapping($this->findOne(['id' => $inventoryId]));
+    }
+
+    function deleteById(int $inventoryId)
+    {
+        return $this->delete($inventoryId);
     }
 }

@@ -3,16 +3,10 @@
 namespace App\Library\Orm;
 
 use Core\Library\Repositories\RepositoryInterface;
-use Phalcon\Config;
 use Phalcon\Di;
-use Phalcon\Http\Request;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
-    private $config;
-
-    /** @var Request */
-    private $request;
 
     protected static $perPage = 15;
 
@@ -28,16 +22,6 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $class = $this->modelName();
         $this->model = new $class();
-        $this->request = Di::getDefault()->get('request');
-        $this->config = Di::getDefault()->get('config');
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
     }
 
     /**

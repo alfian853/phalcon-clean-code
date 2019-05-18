@@ -1,11 +1,6 @@
 <?php
 namespace App\Inventory;
-use App\BookLibrary\Repositories\AuthorRepository;
-use App\BookLibrary\Repositories\BookRepository;
-use Core\Modules\Author\Commands\AddAuthorCommand;
-use Core\Modules\Author\Commands\GetAuthorCommand;
-use Core\Modules\Book\Commands\AddBookCommand;
-use Core\Modules\Book\Commands\GetBookCommand;
+use App\Inventory\Repositories\InventoryRepository;
 use Phalcon\DiInterface;
 use Phalcon\Loader;
 use Phalcon\Mvc\ModuleDefinitionInterface;
@@ -27,10 +22,10 @@ class Module implements ModuleDefinitionInterface
             'App\Inventory\Models' => __DIR__ . '/models',
             'App\Inventory\Repositories' => __DIR__ . '/repository',
             'App\Inventory\Mappers' => __DIR__ . '/mappers',
+            'App\Inventory\Traits' => __DIR__ . '/traits'
         ]);
         $loader->register();
-
-        $this->registerCommands($di);
+//        $this->registerCommands($di);
     }
 
     private function registerCommands(DiInterface $di){

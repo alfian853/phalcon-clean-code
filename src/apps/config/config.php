@@ -23,19 +23,12 @@ return new Config(
         ],   
 
         'url' => [
-            'baseUrl' => 'http://oidc.local/',
+            'baseUrl' => 'http://localhost:8008/',
         ],
         
         'application' => [
             'libraryDir' => APP_PATH . "/lib/",
             'cacheDir' => APP_PATH . "/cache/",
-        ],
-
-        'oauth' => [
-            'refresh_token_lifespan' => $oneMonthInterval,
-            'access_token_lifespan' => $oneHourInterval,
-            'auth_code_lifespan' => $tenMinutesInterval,
-            'always_include_client_scopes' => true,
         ],
 
         'version' => '0.1',

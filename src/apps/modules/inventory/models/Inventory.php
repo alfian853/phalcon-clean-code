@@ -2,18 +2,18 @@
 
 namespace App\Inventory\Models;
 
-
 use App\Library\Orm\BaseModel;
-
-/**
- * @property int id
- * @property string name
- * @property string email
- */
 
 class Inventory extends BaseModel
 {
-    public $id;
+    public $id,
+        $name,
+        $price,
+        $quantity,
+        $description,
+        $type;
+//        $category;
+
 
     public function initialize()
     {

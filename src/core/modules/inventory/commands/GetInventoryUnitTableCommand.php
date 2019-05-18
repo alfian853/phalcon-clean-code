@@ -2,48 +2,39 @@
 
 namespace Core\Modules\Inventory\Commands;
 
-use Core\Library\DataTablesResponse;
+
 use Core\Library\Repositories\Criteria;
 use Core\Library\Repositories\EntityField;
-use Core\Library\Repositories\ListOfSearchCriteria;
-use Core\Library\Repositories\SearchCriteria;
 use Core\Library\Requests\DataTableRequest;
-use Core\Modules\Inventory\Entities\Category;
-use Core\Modules\Inventory\Entities\Inventory;
-use Core\Modules\Inventory\Orm\InventoryRepository;
-use Core\Modules\Inventory\Requests\InventoryColumnEnum;
-use Core\Modules\Inventory\Requests\InventoryTablesRequest;
+use Core\Modules\Inventory\Orm\InventoryUnitRepository;
 
-class GetInventoryTableCommand
+class GetInventoryUnitTableCommand
 {
-    private $repository;
+
+    private $unitRepository;
 
     /**
-     * GetInventoryTableCommand constructor.
-     * @param InventoryRepository $repository
+     * GetInventoryUnitTableCommand constructor.
+     * @param $unitRepository
      */
-    public function __construct(InventoryRepository $repository)
+    public function __construct(InventoryUnitRepository $unitRepository)
     {
-        $this->repository = $repository;
+        $this->unitRepository = $unitRepository;
     }
 
-    /**
-     * @param DataTableRequest $request
-     * @return mixed
-     */
-    public function execute(DataTableRequest $request)
-    {
+
+    function execute(DataTableRequest $request){
         $criteria = new Criteria();
         $criteria->setPage($request->getStart()/$request->getLength());
         $criteria->setLength($request->getLength());
 
         $orderBy = $request->getOrderBy();
 
-        switch ($orderBy){
-            case 'category':
-                $criteria->setOrderBy(new EntityField(Category::class,'name'));
-            default:
-                $criteria->setOrderBy(new EntityField(Inventory::class, $orderBy), $request->getOrderDir());
+        if($orderBy == ''){
+            $criteria->setOrderBy(new EntityField(Category::class,'name'));
+        }
+        else{
+            $criteria->setOrderBy(new EntityField(Inventory::class, $orderBy), $request->getOrderDir());
         }
 
         $listOfSearch = new ListOfSearchCriteria();
@@ -57,6 +48,8 @@ class GetInventoryTableCommand
                                 new EntityField(Category::class,'name'),$column['search']
                             )
                         );
+                        break;
+                    case 'action':
                         break;
                     default:
                         $listOfSearch->addToList(
@@ -94,7 +87,5 @@ class GetInventoryTableCommand
         }
 
         $response->setData($data);
-
-        return $response;
     }
 }

@@ -4,15 +4,15 @@ namespace App\Inventory\Controllers\Api;
 use Core\Library\Commands\CommandContainer;
 use Core\Library\Requests\DataTableRequest;
 use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
-use Core\Modules\Inventory\Requests\InventoryTablesRequest;
+use Core\Modules\Inventory\Requests\InventoryRequest;
 use Core\Modules\Inventory\Services\InventoryService;
 use Phalcon\Mvc\Controller;
 /**
- * Class InventoryController
+ * Class InventoryUnitController
  * @property CommandContainer commands injected into DI
  * @property InventoryService inventoryService injected into DI
  */
-class InventoryController extends Controller
+class InventoryUnitController extends Controller
 {
 
     private function sendResponse($res){
@@ -22,26 +22,15 @@ class InventoryController extends Controller
         $response->send();
     }
 
-
     public function dataAction() {
         $request = $this->request->getQuery();
 
         $dataRequest = new DataTableRequest();
-
-        $dataRequest->setOrderBy($request['columns'][$request['order'][0]['column']]['name']);
-
         foreach ($request['columns'] as $query){
-            /** @var String $query */
-            if($query['name'] == 'action')continue;
-
-            $dataRequest->addColumn(
-                $query['name'],
-                $query['search']['value'],
-                $query['searchable']
-            );
+            $dataRequest->addColumn($query['name'],$query['search']['value'],$query['searchable']);
         }
-        $dataRequest->setOrderDir($request['order'][0]['dir']);
-
+        $dataRequest->setOrderBy($request['columns'][$request['order'][0]['column']]['name']);
+        $dataRequest->setOrderDir( $request['order'][0]['dir']);
         $dataRequest->setStart($request['start']);
         $dataRequest->setLength($request['length']);
         $dataRequest->setDraw($request['draw']);

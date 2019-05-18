@@ -1,51 +1,17 @@
 <?php
 
+use App\Inventory\Repositories\CategoryRepository;
 use App\Inventory\Repositories\InventoryRepository;
-use App\Oauth\Repository\AuthCodeRepository;
-use App\Oauth\Repository\RefreshTokenRepository;
 use Core\Library\Commands\CommandContainer;
 use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
-use League\OAuth2\Server\Grant\AuthCodeGrant;
-use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use Core\Modules\Inventory\Commands\SearchCategoriesCommand;
+use Core\Modules\Inventory\Services\InventoryService;
 use Phalcon\Http\Response;
 use Phalcon\Session\Adapter\Files as Session;
 use Phalcon\Security;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Flash\Direct as FlashDirect;
 use Phalcon\Flash\Session as FlashSession;
-use App\Oauth\Repository\AccessTokenRepository;
-use App\Oauth\Repository\ScopeRepository;
-use App\Oauth\Repository\UserRepository;
-use App\Oauth\Repository\ClientRepository;
-use League\OAuth2\Server\AuthorizationServer;
-
-
-
-//$di->setShared('db', function () use ($config) {
-//    $connection = new DbAdapter([
-//        'host' => $config->database->host,
-//        'username' => $config->database->username,
-//        'password' => $config->database->password,
-//        'dbname' => $config->database->dbname,
-//        'port' => $config->database->port
-//    ]);
-//
-//    if ($config->debug) {
-//        $eventsManager = new Phalcon\Events\Manager();
-//        $logger = new Phalcon\Logger\Adapter\File($config->application->logsDir . "sql_debug.log");
-//
-//        $eventsManager->attach('db', function ($event, $connection) use ($logger) {
-//            if ($event->getType() == 'beforeQuery') {
-//                /** @var DbAdapter $connection */
-//                $logger->log($connection->getSQLStatement(), Logger::DEBUG);
-//            }
-//        });
-//
-//        $connection->setEventsManager($eventsManager);
-//    }
-//
-//    return $connection;
-//});
 
 
 $di->setShared('modelsManager', function () {
@@ -170,57 +136,22 @@ $di->setShared('db', function() use ($di) {
     return $connection;
 });
 
-$di->setShared('oauth2Server',function () use ($config){
 
-    $clientRepository = new ClientRepository();
-    $scopeRepository = new ScopeRepository();
-    $accessTokenRepository = new AccessTokenRepository();
-    $userRepository = new UserRepository();
-    $refreshTokenRepository = new RefreshTokenRepository();
-    $authCodeRepository = new AuthCodeRepository();
+//$di->setShared('inventoryRepository',function()use ($inventoryRepository){
+//    return $inventoryRepository;
+//});
 
-    $encryptionKey = "/FnEkTX3bA2u+R4u9PG0vTy3IMnhci9gLYd9pzarZq0=";
-
-    $server = new AuthorizationServer(
-        $clientRepository,
-        $accessTokenRepository,
-        $scopeRepository,
-        APP_PATH.'/private.key',
-        $encryptionKey
-    );
-
-    $passwordGrant = new \League\OAuth2\Server\Grant\PasswordGrant($userRepository, $refreshTokenRepository);
-    $passwordGrant->setRefreshTokenTTL($config->oauth->refresh_token_lifespan);
-
-    $authCodeGrant = new AuthCodeGrant(
-        $authCodeRepository,
-        $refreshTokenRepository,
-        $config->oauth->auth_code_lifespan
-    );
-
-    $refreshTokenGrant = new \League\OAuth2\Server\Grant\RefreshTokenGrant($refreshTokenRepository);
-    $refreshTokenGrant->setRefreshTokenTTL($config->oauth->refresh_token_lifespan);
-
-    $server->enableGrantType($refreshTokenGrant, $config->oauth->access_token_lifespan);
-    $authCodeGrant->setRefreshTokenTTL($config->oauth->refresh_token_lifespan);
-
-    $server->enableGrantType($authCodeGrant, $config->oauth->access_token_lifespan);
-
-    $server->enableGrantType($passwordGrant, $config->oauth->access_token_lifespan);
-
-    $server->enableGrantType(new ClientCredentialsGrant(), $config->oauth->access_token_lifespan);
-
-    $server->enableGrantType(
-        new \League\OAuth2\Server\Grant\ImplicitGrant($config->oauth->access_token_lifespan),
-        $config->oauth->access_token_lifespan
-    );
-
-    return $server;
+$di->setShared('commands', function(){
+    $inventoryRepository = new InventoryRepository();
+    $categoryRepository = new CategoryRepository();
+    $container = new CommandContainer();
+    $container->add(new GetInventoryTableCommand($inventoryRepository));
+    $container->add(new SearchCategoriesCommand($categoryRepository));
+    return $container;
 });
 
-
-$di->setShared('commands', function (){
-    $container = new CommandContainer();
-    $container->add(new GetInventoryTableCommand(new InventoryRepository()));
-    return $container;
+$di->setshared('inventoryService',function() {
+    $inventoryRepository = new InventoryRepository();
+    $categoryRepository = new CategoryRepository();
+    return new InventoryService($inventoryRepository, $categoryRepository);
 });

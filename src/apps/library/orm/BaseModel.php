@@ -52,7 +52,6 @@ class BaseModel extends Model
         $model = new $called_class();
         self::fill($data, $model);
         $res = $model->save();
-        var_dump($res);
         return ($res) ? $model : false;
     }
 

@@ -2,16 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: falnerz
- * Date: 5/15/19
- * Time: 1:28 AM
+ * Date: 5/18/19
+ * Time: 9:14 AM
  */
 
 namespace Core\Modules\Inventory\Entities;
 
 
-class Category
+class Warehouse
 {
-    private $id, $name;
+    private $id;
+    private $address;
 
     /**
      * @return mixed
@@ -32,17 +33,17 @@ class Category
     /**
      * @return mixed
      */
-    public function getName()
+    public function getAddress()
     {
-        return $this->name;
+        return $this->address;
     }
 
     /**
-     * @param mixed $name
+     * @param mixed $address
      */
-    public function setName($name)
+    public function setAddress($address)
     {
-        $this->name = $name;
+        $this->address = $address;
     }
 
 

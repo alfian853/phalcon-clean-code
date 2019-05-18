@@ -14,7 +14,7 @@ class CommandContainer {
     /**
      * Return a new instance of an object
      *
-     * @param CommandInterface $command
+     * @param mixed $command
      * @return mixed
      */
     public function add($command)
@@ -27,7 +27,7 @@ class CommandContainer {
 
     /**
      * @param $class
-     * @return CommandInterface
+     * @return mixed
      */
     public function get($class)
     {
