@@ -15,10 +15,12 @@ trait CriteriaQueryTrait
         switch ($entityField->getEntityClass()){
             case \Core\Modules\Inventory\Entities\Category::class:
                 return \App\Inventory\Models\Category::class;
-                break;
             case \Core\Modules\Inventory\Entities\Inventory::class:
                 return \App\Inventory\Models\Inventory::class;
-                break;
+            case \Core\Modules\Inventory\Entities\InventoryUnit::class:
+                return \App\Inventory\Models\InventoryUnit::class;
+            case \Core\Modules\Inventory\Entities\Warehouse::class:
+                return \App\Inventory\Models\Warehouse::class;
         }
         return null;
     }
@@ -36,7 +38,8 @@ trait CriteriaQueryTrait
                 $search->getEntityField()->getField().' as TEXT) like \'%'.$search->getData().'%\'');
         }
         if($criteria->getOrderBy()){
-            $builder->orderBy($this->getFieldFromColumn($criteria->getOrderBy()).'.'.$criteria->getOrderBy()->getField()
+            $builder->orderBy($this->getFieldFromColumn(
+                $criteria->getOrderBy()).'.'.$criteria->getOrderBy()->getField()
                 .' '.$criteria->getOrderDir());
         }
         $options =

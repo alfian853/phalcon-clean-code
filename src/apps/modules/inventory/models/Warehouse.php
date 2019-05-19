@@ -3,15 +3,29 @@
  * Created by PhpStorm.
  * User: falnerz
  * Date: 5/18/19
- * Time: 9:14 AM
+ * Time: 2:25 PM
  */
 
-namespace Core\Modules\Inventory\Entities;
+namespace App\Inventory\Models;
 
 
-class Warehouse
+use App\Library\Orm\BaseModel;
+
+class Warehouse extends BaseModel
 {
-    private $id,$name,$address;
+    private $id;
+    private $name;
+    private $address;
+
+    public function initialize()
+    {
+        $this->setSource('warehouses');
+    }
+
+    public function getIdentifier()
+    {
+        return $this->id;
+    }
 
     /**
      * @return mixed
@@ -60,6 +74,5 @@ class Warehouse
     {
         $this->address = $address;
     }
-
 
 }

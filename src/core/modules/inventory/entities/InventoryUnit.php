@@ -8,6 +8,7 @@ class InventoryUnit
     private $id;
     private $inventory;
     private $warehouse;
+    private $rack;
 
     /**
      * @return mixed
@@ -55,6 +56,22 @@ class InventoryUnit
     public function setWarehouse(Warehouse $warehouse)
     {
         $this->warehouse = $warehouse;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRack()
+    {
+        return $this->rack;
+    }
+
+    /**
+     * @param mixed $rack
+     */
+    public function setRack($rack)
+    {
+        $this->rack = $rack;
     }
 
 

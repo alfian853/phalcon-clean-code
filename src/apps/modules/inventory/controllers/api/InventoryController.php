@@ -3,8 +3,9 @@ namespace App\Inventory\Controllers\Api;
 
 use Core\Library\Commands\CommandContainer;
 use Core\Library\Requests\DataTableRequest;
+use Core\Library\Requests\SearchRequest;
 use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
-use Core\Modules\Inventory\Requests\InventoryTablesRequest;
+use Core\Modules\Inventory\Commands\SearchInventoriesCommand;
 use Core\Modules\Inventory\Services\InventoryService;
 use Phalcon\Mvc\Controller;
 /**
@@ -63,6 +64,18 @@ class InventoryController extends Controller
             'category_id' => $inventory->getCategory()->getId(),
             'description' => $inventory->getDescription()
         ]);
+    }
+
+    public function searchAction(){
+        $request = $this->request->getQuery();
+        $searhReq = new SearchRequest();
+        $searhReq->setLength($request['length']);
+        $searhReq->setPage($request['page']);
+        $searhReq->setSearch($request['search']);
+        $this->sendResponse(
+            $this->commands->get(SearchInventoriesCommand::class)->execute($searhReq)
+        );
+
     }
 
 

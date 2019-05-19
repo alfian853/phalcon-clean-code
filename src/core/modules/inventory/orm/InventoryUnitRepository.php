@@ -13,7 +13,7 @@ use Core\Modules\Inventory\Entities\InventoryUnit;
 
 interface InventoryUnitRepository
 {
-    function findByCriteria(Criteria $request) : InventoryPaginationResult;
+    function findByCriteria(Criteria $request) : InventoryUnitPaginationResult;
 
     function findById(int $inventoryUnitId) : InventoryUnit;
     function deleteById(int $inventoryUnitId);

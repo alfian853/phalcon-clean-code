@@ -2,10 +2,16 @@
 
 use App\Inventory\Repositories\CategoryRepository;
 use App\Inventory\Repositories\InventoryRepository;
+use App\Inventory\Repositories\InventoryUnitRepository;
+use App\Inventory\Repositories\WarehouseRepository;
 use Core\Library\Commands\CommandContainer;
 use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
+use Core\Modules\Inventory\Commands\GetInventoryUnitTableCommand;
 use Core\Modules\Inventory\Commands\SearchCategoriesCommand;
+use Core\Modules\Inventory\Commands\SearchInventoriesCommand;
+use Core\Modules\Inventory\Commands\SearchWarehousesCommand;
 use Core\Modules\Inventory\Services\InventoryService;
+use Core\Modules\Inventory\Services\InventoryUnitService;
 use Phalcon\Http\Response;
 use Phalcon\Session\Adapter\Files as Session;
 use Phalcon\Security;
@@ -137,21 +143,44 @@ $di->setShared('db', function() use ($di) {
 });
 
 
-//$di->setShared('inventoryRepository',function()use ($inventoryRepository){
-//    return $inventoryRepository;
-//});
+$di->setShared('inventoryRepository',function() {
+    return new InventoryRepository();
+});
+$di->setShared('warehouseRepository', function (){
+    return new WarehouseRepository();
+});
+$di->setShared('inventoryUnitRepository', function ($di){
+    return new InventoryUnitRepository(
+        $di->inventoryRepository,
+        $di->warehouseRepository
+    );
+});
 
-$di->setShared('commands', function(){
+$di->setShared('commands', function()use($di){
     $inventoryRepository = new InventoryRepository();
     $categoryRepository = new CategoryRepository();
+    $warehouseRepository = new WarehouseRepository();
+    $inventoryUnitRepository = new InventoryUnitRepository($inventoryRepository,$warehouseRepository);
+
     $container = new CommandContainer();
     $container->add(new GetInventoryTableCommand($inventoryRepository));
     $container->add(new SearchCategoriesCommand($categoryRepository));
+    $container->add(new GetInventoryUnitTableCommand($inventoryUnitRepository));
+    $container->add(new SearchWarehousesCommand($warehouseRepository));
+    $container->add(new SearchInventoriesCommand($inventoryRepository));
     return $container;
 });
 
-$di->setshared('inventoryService',function() {
+$di->setshared('inventoryService', function() {
     $inventoryRepository = new InventoryRepository();
     $categoryRepository = new CategoryRepository();
     return new InventoryService($inventoryRepository, $categoryRepository);
+});
+
+$di->setShared('inventoryUnitService', function () {
+    $inventoryRepository = new InventoryRepository();
+    $warehouseRepository = new WarehouseRepository();
+    $inventoryUnitRepository = new InventoryUnitRepository($inventoryRepository,$warehouseRepository);
+    $service = new InventoryUnitService($inventoryRepository,$warehouseRepository,$inventoryUnitRepository);
+    return $service;
 });

@@ -7,16 +7,19 @@ class SearchCriteria
 {
     public $entityField;
     public $data;
+    public $isEqualSearch = false;
 
     /**
      * SearchCriteria constructor.
-     * @param $entityField
+     * @param EntityField $entityField
      * @param $data
+     * @param bool $isEqualSearch
      */
-    public function __construct(EntityField $entityField, $data)
+    public function __construct(EntityField $entityField, $data, $isEqualSearch = false)
     {
         $this->entityField = $entityField;
         $this->data = $data;
+        $this->isEqualSearch = $isEqualSearch;
     }
 
     /**
@@ -51,6 +54,13 @@ class SearchCriteria
         $this->data = $data;
     }
 
+    public function setEqualSearch(){
+        $this->isEqualSearch = true;
+    }
+
+    public function setSubstringSearch(){
+        $this->isEqualSearch = false;
+    }
 
 
 }

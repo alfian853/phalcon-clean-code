@@ -42,9 +42,10 @@
         var tableAccess = null;
         let preparedCol = DTAccess.generateColumnSpec([
             {'col':'id'},
-            {'col':'item','searchable' : true, 'orderable' : true},
-            {'col':'warehouse'},
-            {'col':'address','searchable' : true, 'orderable' : true},
+            {'col':'item'},
+            {'col':'price','searchable' : false,'orderable':true},
+            {'col':'category'},
+            {'col':'warehouse','searchable' : true, 'orderable' : true},
             {'col':'action','searchable' : false,'orderable':false}
         ]);
         function loadInventoryDetail(idInventory){
@@ -62,7 +63,7 @@
                         console.log(response)
                         Object.keys(response).forEach(key => {
                             console.log(key)
-                           $('#update-item-form [name='+key+']').val(response[key]);
+                            $('#update-item-form [name='+key+']').val(response[key]);
                         });
                         modal.stopLoading();
                     }).fail(function (file,response) {
@@ -86,13 +87,17 @@
                 serverSide : true,
                 ajax : {
                     'type' : 'GET',
-                    'url' : '/inventory/api/inventoryUnit/data',
+                    'url' : '/inventory/api/inventory_unit/data',
                     'dataSrc' : function (response) {
                         let len = response.data.length;
                         let ref = response.data;
                         for(let i = 0; i<len; i++){
                             ref[i]['action'] =
-                                '<button class="submit btn btn-success" type="submit" onclick="loadInventoryDetail('+ref[i].id+')">Get Barcode</button>'
+                                '<button class="submit btn btn-success" type="submit" onclick="loadInventoryDetail('+ref[i].id+')">Detail</button>' +
+                                '<button class="submit btn btn-danger" style="background-color: #BB281A;" type="submit" onclick="deleteInventory('+ref[i].id+')">' +
+                                '<i class="fas fa-trash"></i>' +
+                                '</button>'
+
                         }
                         return ref;
                     }
@@ -101,8 +106,9 @@
                 columnDefs : preparedCol.columnDefs
             });
 
-            var searchableList = ['id','name','category'];
-
+            var searchableList = ['id','item','category','warehouse'];
+            let target = datatables.column('#itemsTable th[col=\"warehouse\"]');
+            target.search('1').draw();
             for(let i=0;i<searchableList.length;i++){
                 let input = $('#itemsTable [target-col=\"'+searchableList[i]+'\"]');
                 let target = datatables.column('#itemsTable th[col=\"'+searchableList[i]+'\"]');
@@ -146,6 +152,39 @@
                 cache : true
             });
 
+            $('#itemsTable select[target-col=\"warehouse\"]').select2({
+                placeholder : 'Gudang Garam',
+                ajax : {
+                    url : '/inventory/api/warehouse/search',
+                    params : null,
+                    delay : 350,
+                    data : function (params) {
+                        console.log('called');
+                        let query = {
+                            search : (params.term != null)?params.term:"",
+                            page : (params.page)?params.page:0,
+                            length : 10
+                        };
+                        this.params = query;
+                        return query;
+                    },
+                    processResults : function (result) {
+                        let params = this['$element'].params;
+                        result.pagination = {
+                            more : params.length*params.page < result['recordsFiltered']
+                        };
+                        let len = result.results.length;
+                        let tmp = result.results;
+                        // for(let i = 0; i<len; i++){
+                        //     tmp[i].id = tmp[i].text;
+                        // }
+
+                        return result;
+                    }
+                },
+                cache : true
+            });
+
 
             $('#create-item-modal').iziModal({
                 title : 'Create Item',
@@ -155,10 +194,35 @@
                 fullScreen : true,
                 history: false,
                 onOpening : function(){
-                    $('select[name=\"category_id\"]').select2({
-                        placeholder : 'Please select category...',
+                    $('select[name=\"warehouse_id\"]').select2({
+                        placeholder : 'Please select warehouse...',
                         ajax : {
-                            url : '/inventory/api/category/search',
+                            url : '/inventory/api/warehouse/search',
+                            params : null,
+                            delay : 350,
+                            data : function (params) {
+                                let query = {
+                                    search : (params.term != null)?params.term:"",
+                                    page : (params.page)?params.page:0,
+                                    length : 10
+                                };
+                                this.params = query;
+                                return query;
+                            },
+                            processResults : function (result) {
+                                let params = this['$element'].params;
+                                result.pagination = {
+                                    more : params.length*params.page < result['recordsFiltered']
+                                };
+                                return result;
+                            }
+                        },
+                        cache : true
+                    });
+                    $('select[name=\"inventory_id\"]').select2({
+                        placeholder : 'Please select warehouse...',
+                        ajax : {
+                            url : '/inventory/api/inventory/search',
                             params : null,
                             delay : 350,
                             data : function (params) {
@@ -201,82 +265,28 @@
 
 <div id="create-item-modal">
     <div class="modal-body">
-        <form id="create-item-form" action="/inventory/inventory/create" method="POST" enctype="multipart/form-data">
+        <form id="create-item-form" action="/inventory/inventory_unit/create" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label class="form-label">Item Name *</label><br>
-                <input class="form-input" name="name" type="text">
+                <label class="form-label">Warehouse..</label><br>
+                {#<select class="form-input" style="width: 95.5%;" name="warehouse_id">#}
+                {#</select>#}
+                <input type="hidden" name="warehouse_id" value="1">
             </div>
             <div class="form-group">
-                <label class="form-label">Item Quantity *</label><br>
-                <input class="form-input" type="number" min="0" name="quantity" style="width: 95.5%;">
+                <label class="form-label">Inventory name..</label><br>
+                {#<select class="form-input" style="width: 95.5%;" name="inventory_id">#}
+                {#</select>#}
+                <input type="hidden" name="inventory_id" value="1">
             </div>
             <div class="form-group">
-                <label class="form-label">Item Price</label><br>
-                <input class="form-input" type="number" min="0" name="price" style="width: 95.5%;">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Item Category</label><br>
-                <select class="form-input" style="width: 95.5%;" name="category_id">
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Item type</label>
-                <select class="form-input" style="width: 95.5%; padding-right: 25px;" name="type">
-                        <option value="Consumable">Consumable</option>
-                        <option value="Stockable">Stockable</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Description</label><br>
-                <textarea class="form-input" name="description"></textarea>
+                <label class="form-label">Rack</label><br>
+                <textarea class="form-input" name="rack"></textarea>
             </div>
             <div class="form-action">
                 <button type="submit" class="submit btn btn-success" id="add-item-submit">Add Item</button>
             </div>
         </form>
     </div>
-</div>
-<div id="inventory-detail-modal" style="display: none">
-    <form id="update-item-form" action="/inventory/inventory/update" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="id">
-        <div class="form-group">
-            <label class="form-label">Item Name *</label><br>
-            <input class="form-input" name="name" type="text">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Item Quantity *</label><br>
-            <input class="form-input" type="number" min="0" name="quantity" style="width: 95.5%;">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Item Price</label><br>
-            <input class="form-input" type="number" min="0" name="price" style="width: 95.5%;">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Item Category</label><br>
-            <select class="form-input" style="width: 95.5%;" name="category_id">
-                <option value="1">/all</option>
-                <option value="2">/all/book</option>
-                <option value="3">/all/listrik</option>
-                <option value="4">/all/book/software design</option>
-                <option value="5">/all/book/algorithm</option>
-                <option value="6">/all/novel</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Item type</label>
-            <select class="form-input" style="width: 95.5%; padding-right: 25px;" name="type">
-                <option value="Consumable">Consumable</option>
-                <option value="Stockable">Stockable</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Description</label><br>
-            <textarea class="form-input" name="description"></textarea>
-        </div>
-        <div class="form-action">
-            <button type="submit" class="submit btn btn-success" id="add-item-submit">Update Data</button>
-        </div>
-    </form>
 </div>
 
 <div id="content">
@@ -286,8 +296,7 @@
             <thead>
             <tr>
                 <th><input type="text" style="width: 60px" placeholder="Id.." target-col="id"/></th>
-                <th><input type="text" placeholder="Name.." target-col="name"/></th>
-                <th></th>
+                <th><input type="text" placeholder="Item.." target-col="item"/></th>
                 <th></th>
                 <th>
                     <select target-col="category" style="width: 200px;">
@@ -296,16 +305,21 @@
                         <!--</th:block>-->
                     </select>
                 </th>
-                <th></th>
+                <th>
+                    <select target-col="warehouse" style="width: 200px;">
+                        <!--<th:block th:each="category : ${categories}">-->
+                        <!--<option th:value="${category.name}" th:text="${category.name}">Option i</option>-->
+                        <!--</th:block>-->
+                    </select>
+                </th>
                 <th></th>
             </tr>
             <tr>
                 <th col="id">Id</th>
-                <th col="name">Name</th>
+                <th col="item">Item</th>
                 <th col="price">Price</th>
-                <th col="quantity">Quantity</th>
                 <th col="category">Category</th>
-                <th col="type">Type</th>
+                <th col="warehouse">Warehouse</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -315,11 +329,10 @@
             <tfoot>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>Item</th>
                 <th>Price</th>
-                <th>Quantity</th>
                 <th>Category</th>
-                <th>Type</th>
+                <th>Warehouse</th>
                 <th>Action</th>
             </tr>
             </tfoot>

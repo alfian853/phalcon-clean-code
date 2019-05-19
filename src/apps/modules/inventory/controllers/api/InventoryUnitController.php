@@ -4,6 +4,7 @@ namespace App\Inventory\Controllers\Api;
 use Core\Library\Commands\CommandContainer;
 use Core\Library\Requests\DataTableRequest;
 use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
+use Core\Modules\Inventory\Commands\GetInventoryUnitTableCommand;
 use Core\Modules\Inventory\Requests\InventoryRequest;
 use Core\Modules\Inventory\Services\InventoryService;
 use Phalcon\Mvc\Controller;
@@ -27,6 +28,7 @@ class InventoryUnitController extends Controller
 
         $dataRequest = new DataTableRequest();
         foreach ($request['columns'] as $query){
+            if($query['name'] == 'action')continue;
             $dataRequest->addColumn($query['name'],$query['search']['value'],$query['searchable']);
         }
         $dataRequest->setOrderBy($request['columns'][$request['order'][0]['column']]['name']);
@@ -36,7 +38,7 @@ class InventoryUnitController extends Controller
         $dataRequest->setDraw($request['draw']);
 
         $this->sendResponse(
-            $this->commands->get(GetInventoryTableCommand::class)->execute($dataRequest)
+            $this->commands->get(GetInventoryUnitTableCommand::class)->execute($dataRequest)
         );
     }
 

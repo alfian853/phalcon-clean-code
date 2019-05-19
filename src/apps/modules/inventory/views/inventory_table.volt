@@ -205,7 +205,7 @@
 <body>
 <button class="btn btn-success" id="itemBtn">Create Item</button>
 
-<div id="create-item-modal">
+<div id="create-item-modal" style="display: none">
     <div class="modal-body">
         <form id="create-item-form" action="/inventory/inventory/create" method="POST" enctype="multipart/form-data">
             <div class="form-group">
