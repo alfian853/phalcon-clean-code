@@ -32,7 +32,7 @@ class InventoryController extends Controller
         $dataRequest->setOrderBy($request['columns'][$request['order'][0]['column']]['name']);
 
         foreach ($request['columns'] as $query){
-            /** @var String $query */
+            /** @var string $query */
             if($query['name'] == 'action')continue;
 
             $dataRequest->addColumn(

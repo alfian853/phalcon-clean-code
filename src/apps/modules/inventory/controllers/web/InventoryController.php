@@ -5,11 +5,14 @@ use Core\Library\Commands\CommandContainer;
 use Core\Modules\Inventory\Requests\InventoryRequest;
 use Core\Modules\Inventory\Services\InventoryService;
 use Phalcon\Mvc\Controller;
+use Dompdf\Dompdf;
+use Phalcon\Mvc\View\Simple;
 
 /**
  * Class InventoryController
  * @property CommandContainer commands injected into DI
  * @property InventoryService inventoryService injected into DI
+ * @property Simple view2
  */
 class InventoryController extends Controller
 {
@@ -50,5 +53,17 @@ class InventoryController extends Controller
         $response->send();
     }
 
+    public function heheAction(){
+        return $this->view->pick("tes_pdf.volt");
+    }
+
+    public function manaAction(){
+        $dompdf = new DOMPDF();  //if you use namespaces you may use new \DOMPDF()
+
+        $this->simpleView->setVar("nama","alfian");
+        $dompdf->loadHtml($this->simpleView->render("tes_pdf"));
+        $dompdf->render();
+        $dompdf->stream("sample.pdf", array("Attachment"=>0));
+    }
 
 }

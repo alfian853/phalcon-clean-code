@@ -19,6 +19,7 @@ $loader->registerNamespaces(array(
     'Core\Modules\Inventory\Orm' => CORE_PATH . '/modules/inventory/orm',
     'Core\Modules\Inventory\Requests' => CORE_PATH . '/modules/inventory/requests',
     'Core\Modules\Inventory\Services' => CORE_PATH . '/modules/inventory/services',
+    'Core\Modules\Inventory\Utils' => CORE_PATH . '/modules/inventory/utils',
 ));
 
 

@@ -93,11 +93,10 @@
                         let ref = response.data;
                         for(let i = 0; i<len; i++){
                             ref[i]['action'] =
-                                '<button class="submit btn btn-success" type="submit" onclick="loadInventoryDetail('+ref[i].id+')">Detail</button>' +
-                                '<button class="submit btn btn-danger" style="background-color: #BB281A;" type="submit" onclick="deleteInventory('+ref[i].id+')">' +
-                                '<i class="fas fa-trash"></i>' +
-                                '</button>'
-
+        '<a class="submit btn btn-success" href="/inventory/inventory_unit/generatePdf?id='+ref[i].id+'" target="_blank">Print Info</a>' +
+        '<button class="submit btn btn-danger" style="background-color: #BB281A;" type="submit" onclick="deleteInventory('+ref[i].id+')">' +
+        '<i class="fas fa-trash"></i>' +
+        '</button>'
                         }
                         return ref;
                     }
@@ -119,7 +118,7 @@
                 });
             }
 
-            tableAccess = new DTAccess(datatables,'row_',7);
+            tableAccess = new DTAccess(datatables,'row_',6);
             $('#itemsTable select[target-col=\"category\"]').select2({
                 placeholder : 'Please select category..',
                 ajax : {
@@ -187,7 +186,7 @@
 
 
             $('#create-item-modal').iziModal({
-                title : 'Create Item',
+                title : 'Add Unit',
                 width : screen.width*0.5,
                 height : screen.height*0.9,
                 closeButton : true,
@@ -262,21 +261,22 @@
 </head>
 <body>
 <button class="btn btn-success" id="itemBtn">Create Item</button>
+{#<button class="btn btn-success" id="itemBtn">Create Item</button>#}
 
-<div id="create-item-modal">
+<div id="create-item-modal" style="display: none">
     <div class="modal-body">
         <form id="create-item-form" action="/inventory/inventory_unit/create" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="form-label">Warehouse..</label><br>
-                {#<select class="form-input" style="width: 95.5%;" name="warehouse_id">#}
-                {#</select>#}
-                <input type="hidden" name="warehouse_id" value="1">
+                <select class="form-input" style="width: 95.5%;" name="warehouse_id">
+                </select>
+                {#<input type="hidden" name="warehouse_id" value="1">#}
             </div>
             <div class="form-group">
                 <label class="form-label">Inventory name..</label><br>
-                {#<select class="form-input" style="width: 95.5%;" name="inventory_id">#}
-                {#</select>#}
-                <input type="hidden" name="inventory_id" value="1">
+                <select class="form-input" style="width: 95.5%;" name="inventory_id">
+                </select>
+                {#<input type="hidden" name="inventory_id" value="1">#}
             </div>
             <div class="form-group">
                 <label class="form-label">Rack</label><br>

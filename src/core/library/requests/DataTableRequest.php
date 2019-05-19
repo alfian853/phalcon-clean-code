@@ -66,7 +66,7 @@ class DataTableRequest
     /**
      * @return mixed
      */
-    public function getOrderDir() : String
+    public function getOrderDir() : string
     {
         return $this->orderDir;
     }
@@ -74,12 +74,12 @@ class DataTableRequest
     /**
      * @param mixed $orderDir
      */
-    public function setOrderDir(String $orderDir)
+    public function setOrderDir(string $orderDir)
     {
         $this->orderDir = $orderDir;
     }
 
-    public function addColumn(String $name,String $searchValue,bool $searchable){
+    public function addColumn(string $name,string $searchValue,bool $searchable){
 
         array_push($this->columns,[
             'name' => $name,
@@ -91,7 +91,7 @@ class DataTableRequest
     /**
      * @return mixed
      */
-    public function getOrderBy() : String
+    public function getOrderBy() : string
     {
         return $this->orderBy;
     }
@@ -99,7 +99,7 @@ class DataTableRequest
     /**
      * @param mixed $orderBy
      */
-    public function setOrderBy(String $orderBy)
+    public function setOrderBy(string $orderBy)
     {
         $this->orderBy = $orderBy;
     }

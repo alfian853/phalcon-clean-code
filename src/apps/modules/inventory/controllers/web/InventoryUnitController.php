@@ -2,6 +2,7 @@
 namespace App\Inventory\Controllers\Web;
 
 use Core\Library\Commands\CommandContainer;
+use Core\Modules\Inventory\Commands\SendInventoryPdfCommand;
 use Core\Modules\Inventory\Requests\InventoryRequest;
 use Core\Modules\Inventory\Requests\InventoryUnitRequest;
 use Core\Modules\Inventory\Services\InventoryService;
@@ -50,5 +51,9 @@ class InventoryUnitController extends Controller
         $response->send();
     }
 
+    public function generatePdfAction() {
+        $id = $this->request->getQuery("id");
+        $this->commands->get(SendInventoryPdfCommand::class)->execute($id);
+    }
 
 }

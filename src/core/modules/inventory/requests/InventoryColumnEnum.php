@@ -16,7 +16,7 @@ class InventoryColumnEnum
     CATEGORY = 'name',
     TYPE = 'type';
 
-    static function getConst(String $column)
+    static function getConst(string $column)
     {
         switch ($column) {
             case 'id':

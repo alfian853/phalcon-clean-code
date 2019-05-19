@@ -1,6 +1,9 @@
 <?php
 namespace App\Inventory;
 use App\Inventory\Repositories\InventoryRepository;
+use App\Library\Utils\AppItemDetailPdfGenerator;
+use App\Library\Utils\ViewWrapper;
+use Core\Modules\Inventory\Commands\SendInventoryPdfCommand;
 use Phalcon\DiInterface;
 use Phalcon\Loader;
 use Phalcon\Mvc\ModuleDefinitionInterface;
@@ -25,7 +28,6 @@ class Module implements ModuleDefinitionInterface
             'App\Inventory\Traits' => __DIR__ . '/traits'
         ]);
         $loader->register();
-//        $this->registerCommands($di);
     }
 
     private function registerCommands(DiInterface $di){
@@ -57,5 +59,27 @@ class Module implements ModuleDefinitionInterface
             );
             return $view;
         };
+        $di['simpleView'] = function () {
+            $view = new View\Simple();
+            $view->setViewsDir(__DIR__ . '/views/');
+            $view->registerEngines(
+                [
+                    ".volt" => "voltService",
+                ]
+            );
+            return $view;
+        };
+
+        $di['itemPdfGenerator'] = function () use($di) {
+            $pdfGenerator = new AppItemDetailPdfGenerator($di->get('simpleView'));
+            $pdfGenerator->setViewPath("inventory_pdf_template");
+            return $pdfGenerator;
+        };
+
+        $di->get('commands')->add(
+            new SendInventoryPdfCommand($di->get("itemPdfGenerator"),$di->get("inventoryUnitRepository"))
+        );
+
+
     }
 }

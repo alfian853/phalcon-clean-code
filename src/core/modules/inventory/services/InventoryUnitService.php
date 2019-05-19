@@ -47,6 +47,15 @@ class InventoryUnitService
         $unit->setInventory($inventory);
         $unit->setWarehouse($warehouse);
 
-        $this->inventoryUnitRepository->createInventoryUnit($unit);
+        $success = $this->inventoryUnitRepository->createInventoryUnit($unit) != false;
+
+        if($success){
+            $inventory->setQuantity($inventory->getQuantity()+1);
+            $this->inventoryRepository->updateInventory($inventory);
+        }
+    }
+
+    public function deleteInventoryUnit(string $unitId){
+
     }
 }

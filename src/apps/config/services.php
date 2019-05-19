@@ -149,18 +149,22 @@ $di->setShared('inventoryRepository',function() {
 $di->setShared('warehouseRepository', function (){
     return new WarehouseRepository();
 });
-$di->setShared('inventoryUnitRepository', function ($di){
+$di->setShared('categoryRepository', function (){
+    return new CategoryRepository();
+});
+
+$di->setShared('inventoryUnitRepository', function ()use($di){
     return new InventoryUnitRepository(
-        $di->inventoryRepository,
-        $di->warehouseRepository
+        $di->get("inventoryRepository"),
+        $di->get("warehouseRepository")
     );
 });
 
 $di->setShared('commands', function()use($di){
-    $inventoryRepository = new InventoryRepository();
-    $categoryRepository = new CategoryRepository();
-    $warehouseRepository = new WarehouseRepository();
-    $inventoryUnitRepository = new InventoryUnitRepository($inventoryRepository,$warehouseRepository);
+    $inventoryRepository = $di->get("inventoryRepository");
+    $categoryRepository = $di->get("categoryRepository");
+    $warehouseRepository = $di->get("warehouseRepository");
+    $inventoryUnitRepository = $di->get("inventoryUnitRepository");
 
     $container = new CommandContainer();
     $container->add(new GetInventoryTableCommand($inventoryRepository));
@@ -171,16 +175,16 @@ $di->setShared('commands', function()use($di){
     return $container;
 });
 
-$di->setshared('inventoryService', function() {
-    $inventoryRepository = new InventoryRepository();
-    $categoryRepository = new CategoryRepository();
+$di->setshared('inventoryService', function() use($di){
+    $inventoryRepository = $di->get("inventoryRepository");
+    $categoryRepository = $di->get("categoryRepository");
     return new InventoryService($inventoryRepository, $categoryRepository);
 });
 
-$di->setShared('inventoryUnitService', function () {
-    $inventoryRepository = new InventoryRepository();
-    $warehouseRepository = new WarehouseRepository();
-    $inventoryUnitRepository = new InventoryUnitRepository($inventoryRepository,$warehouseRepository);
+$di->setShared('inventoryUnitService', function () use($di){
+    $inventoryRepository = $di->get("inventoryRepository");
+    $warehouseRepository = $di->get("warehouseRepository");
+    $inventoryUnitRepository =$di->get("inventoryUnitRepository");
     $service = new InventoryUnitService($inventoryRepository,$warehouseRepository,$inventoryUnitRepository);
     return $service;
 });
