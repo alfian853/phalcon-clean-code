@@ -11,6 +11,7 @@ setlocale(LC_TIME, 'id-ID');
 define('BASE_PATH', dirname(__DIR__));
 define('CORE_PATH', BASE_PATH . '/core');
 define('APP_PATH', BASE_PATH . '/apps');
+define('PUBLIC_PATH', BASE_PATH . '/public');
 
 date_default_timezone_set('Asia/Jakarta');
 

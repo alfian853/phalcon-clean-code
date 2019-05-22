@@ -12,7 +12,7 @@ namespace Core\Modules\Inventory\Commands;
 use Core\Modules\Inventory\Orm\InventoryUnitRepository;
 use Core\Modules\Inventory\Utils\ItemDetailPdfGenerator;
 
-class SendInventoryPdfCommand
+class GetInventoryPdfUrlCommand
 {
 
     private $pdfGenerator, $unitRepository;
@@ -30,6 +30,6 @@ class SendInventoryPdfCommand
 
     public function execute(string $inventoryUnitId){
         $unit = $this->unitRepository->findById($inventoryUnitId);
-        $this->pdfGenerator->addItemData($unit)->render()->sendPdfResponse("contoh.pdf");
+        return $this->pdfGenerator->addItemData($unit)->render()->getDownloadUrl($unit->getId().".pdf");
     }
 }

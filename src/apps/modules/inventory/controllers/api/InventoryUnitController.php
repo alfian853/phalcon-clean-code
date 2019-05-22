@@ -3,9 +3,11 @@ namespace App\Inventory\Controllers\Api;
 
 use Core\Library\Commands\CommandContainer;
 use Core\Library\Requests\DataTableRequest;
-use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
 use Core\Modules\Inventory\Commands\GetInventoryUnitTableCommand;
-use Core\Modules\Inventory\Requests\InventoryRequest;
+use Core\Modules\Inventory\Commands\GetInvoicePdfUrlCommand;
+use Core\Modules\Inventory\Commands\SearchItemWarehouseCommand;
+use Core\Modules\Inventory\Requests\CreateInvoiceRequest;
+use Core\Modules\Inventory\Requests\ItemWarehouseSearchRequest;
 use Core\Modules\Inventory\Services\InventoryService;
 use Phalcon\Mvc\Controller;
 /**
@@ -54,6 +56,37 @@ class InventoryUnitController extends Controller
             'category_id' => $inventory->getCategory()->getId(),
             'description' => $inventory->getDescription()
         ]);
+    }
+
+    public function invoiceCreateModalAction(){
+        return $this->view->pick('invoice_create');
+    }
+
+    public function createInvoiceAction(){
+        $cRequest = new CreateInvoiceRequest();
+        foreach ($this->request->getJsonRawBody()->items as $id){
+            $cRequest->addIdToList($id);
+        }
+        $url = $this->commands->get(GetInvoicePdfUrlCommand::class)->execute($cRequest);
+        $this->sendResponse([
+            'document_url' => $url
+        ]);
+    }
+
+    public function searchAction(){
+        $request = $this->request->getQuery();
+        $searhReq = new ItemWarehouseSearchRequest();
+        $searhReq->setLength($request['length']);
+        $searhReq->setPage($request['page']);
+        $searhReq->setSearch($request['search']);
+        $searhReq->setWarehouseId($request['warehouse_id']);
+        if($searhReq->getWarehouseId() == null){
+            $this->sendResponse([]);
+        }
+        $this->sendResponse(
+            $this->commands->get(SearchItemWarehouseCommand::class)->execute($searhReq)
+        );
+
     }
 
 

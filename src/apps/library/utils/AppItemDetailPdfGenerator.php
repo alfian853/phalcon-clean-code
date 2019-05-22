@@ -21,16 +21,12 @@ use Phalcon\Mvc\View\Simple;
 class AppItemDetailPdfGenerator implements ItemDetailPdfGenerator
 {
 
-    private $view, $viewPath, $domPdf;
+    private $view, $viewPath = "inventory_pdf_template", $domPdf;
 
     function __construct(Simple $simpleView)
     {
         $this->view = $simpleView;
         $this->domPdf = new Dompdf();
-    }
-
-    function setViewPath($path){
-        $this->viewPath = $path;
     }
 
     function render() : ItemDetailPdfGenerator
@@ -40,9 +36,10 @@ class AppItemDetailPdfGenerator implements ItemDetailPdfGenerator
         return $this;
     }
 
-    function sendPdfResponse(string $filename)
+    function getDownloadUrl(string $filename)
     {
-        $this->domPdf->stream($filename, array("Attachment"=>0));
+        file_put_contents(PUBLIC_PATH . '/unit_details/' . $filename, $this->domPdf->output());
+        return 'unit_details/'.$filename;
     }
 
     function addItemData(InventoryUnit $item) : ItemDetailPdfGenerator

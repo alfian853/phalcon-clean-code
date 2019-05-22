@@ -2,7 +2,7 @@
 namespace App\Inventory\Controllers\Web;
 
 use Core\Library\Commands\CommandContainer;
-use Core\Modules\Inventory\Commands\SendInventoryPdfCommand;
+use Core\Modules\Inventory\Commands\GetInventoryPdfUrlCommand;
 use Core\Modules\Inventory\Requests\InventoryRequest;
 use Core\Modules\Inventory\Requests\InventoryUnitRequest;
 use Core\Modules\Inventory\Services\InventoryService;
@@ -31,7 +31,7 @@ class InventoryUnitController extends Controller
 
         $this->inventoryUnitService->createInventoryUnit($createRequest);
         $response = $this->response;
-        $response->redirect('inventory/inventory');
+        $response->redirect('inventory/inventory_unit');
         $response->send();
     }
 
@@ -53,7 +53,17 @@ class InventoryUnitController extends Controller
 
     public function generatePdfAction() {
         $id = $this->request->getQuery("id");
-        $this->commands->get(SendInventoryPdfCommand::class)->execute($id);
+        $url = $this->commands->get(GetInventoryPdfUrlCommand::class)->execute($id);
+        $this->response->redirect($url)->send();
     }
+
+    public function deleteAction(){
+        $this->inventoryUnitService->deleteInventoryUnit(
+            $this->request->getPost('unit_id')
+        );
+
+        $this->response->redirect('inventory/inventory_unit')->send();
+    }
+
 
 }

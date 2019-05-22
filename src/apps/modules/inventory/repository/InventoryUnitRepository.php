@@ -55,16 +55,14 @@ class InventoryUnitRepository extends AbstractRepository implements CoreInventor
 
     function findById(string $inventoryUnitId): CoreInventoryUnit
     {
-//        var_dump($this->findOne(['id' => $inventoryUnitId]));
-//        die();
         return InventoryUnitMapper::mapping(
             $this->findOne(['id' => $inventoryUnitId])
         );
     }
 
-    function deleteById(string $inventoryUnitId)
+    function deleteById(string $inventoryUnitId): bool
     {
-        // TODO: Implement deleteById() method.
+        return $this->delete($inventoryUnitId);
     }
 
     function createInventoryUnit(CoreInventoryUnit $coreInventoryUnit): CoreInventoryUnit

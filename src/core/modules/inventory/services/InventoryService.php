@@ -48,6 +48,11 @@ class InventoryService
         );
 
         $inventory->setCategory($category);
+        $inventory->setName($request->getName());
+        $inventory->setPrice($request->getPrice());
+        $inventory->setDescription($request->getDescription());
+        $inventory->setType($request->getType());
+        $inventory->setQuantity($request->getQuantity());
         return $this->inventoryRepository->updateInventory($inventory);
     }
 

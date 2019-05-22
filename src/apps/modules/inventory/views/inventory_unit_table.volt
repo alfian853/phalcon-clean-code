@@ -33,6 +33,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izimodal-1.6.0@1.6.1/css/iziModal.min.css">
     <script src="https://cdn.jsdelivr.net/npm/izimodal-1.6.0@1.6.1/js/iziModal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
     <style>
         .dataTables_filter, .dataTables_info { display: none; }
@@ -80,7 +82,61 @@
             $('#inventory-detail-modal').iziModal('open');
 
         }
+
+        function deleteInventory(unit_id){
+            iziToast.show({
+                theme: 'light',
+                icon: 'icon-money',
+                title: 'Hey',
+                message: 'Apakah anda yakin ingin menghapus?',
+                position: 'center', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+                progressBarColor: 'rgb(0, 255, 184)',
+                color : 'blue',
+                buttons: [
+                    ['<button>Ya</button>', function (instance, toast) {
+
+                        $('#delete-form input[name=unit_id]').val(unit_id);
+                        $('#delete-form').submit();
+
+
+                    }, true], // true to focus
+                    ['<button>Batalkan</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'fadeOutUp',
+                            onClosing: function(instance, toast, closedBy){
+                                console.info('closedBy: ' + closedBy); // The return will be: 'closedBy: buttonName'
+                            }
+                        }, toast, 'buttonName');
+                    }]
+                ]
+            });
+        }
+
         $(document).ready(function(){
+            $('#assignItemBtn').click(function () {
+                $('#assign-item-modal').iziModal({
+                    title: 'Assign Item to User',
+                    width: screen.width * 0.6,
+                    height: screen.height,
+                    closeButton: true,
+                    fullScreen: true,
+                    history: false,
+                    onOpening: function (modal) {
+                        modal.startLoading();
+                        $.get('/inventory/api/inventory_unit/invoiceCreateModal', function (html) {
+                            $('#assign-item-modal .iziModal-content').html(html);
+                            modal.stopLoading();
+                        }).fail(function () {
+                            modal.stopLoading();
+                            toastMessage('error', 'Failed', 'Something wrong :(');
+                            $('.iziModal-button-close').click();
+                        });
+                    }
+                });
+
+                $('#assign-item-modal').iziModal('open');
+            });
+
 
             var datatables = $('#itemsTable').DataTable({
                 processing: true,
@@ -93,11 +149,11 @@
                         let ref = response.data;
                         for(let i = 0; i<len; i++){
                             ref[i]['action'] =
-        '<a class="submit btn btn-success" href="/inventory/inventory_unit/generatePdf?id='+ref[i].id+'" target="_blank">Print Info</a>' +
-        '<button class="submit btn btn-danger" style="background-color: #BB281A;" type="submit" onclick="deleteInventory('+ref[i].id+')">' +
-        '<i class="fas fa-trash"></i>' +
-        '</button>'
-                        }
+        '<a class="submit btn btn-success" href="/inventory/inventory_unit/generatePdf?id='+ref[i].id+'" target="_blank">Print Info</a>'+
+        '<button class="submit btn btn-danger" style="background-color: #BB281A;" onclick="deleteInventory(\''+ref[i].id+'\')">' +
+                    '<i class="fas fa-trash"></i>' +
+                    '</button>'
+                }
                         return ref;
                     }
                 },
@@ -260,8 +316,15 @@
 
 </head>
 <body>
-<button class="btn btn-success" id="itemBtn">Create Item</button>
-{#<button class="btn btn-success" id="itemBtn">Create Item</button>#}
+<div id="assign-item-modal"></div>
+<button class="btn btn-success" id="assignItemBtn">create invoice</button>
+
+<form id="delete-form" method="post" action="/inventory/inventory_unit/delete">
+    <input type="hidden" name="unit_id">
+</form>
+
+
+<button class="btn btn-success" id="itemBtn">Add Unit</button>
 
 <div id="create-item-modal" style="display: none">
     <div class="modal-body">

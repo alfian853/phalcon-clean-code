@@ -15,5 +15,5 @@ interface ItemDetailPdfGenerator
 {
     function addItemData(InventoryUnit $item) : ItemDetailPdfGenerator;
     function render() : ItemDetailPdfGenerator;
-    function sendPdfResponse(string $filename);
+    function getDownloadUrl(string $filename);
 }

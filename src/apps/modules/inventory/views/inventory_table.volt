@@ -33,6 +33,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izimodal-1.6.0@1.6.1/css/iziModal.min.css">
     <script src="https://cdn.jsdelivr.net/npm/izimodal-1.6.0@1.6.1/js/iziModal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
     <style>
         .dataTables_filter, .dataTables_info { display: none; }
@@ -81,6 +83,37 @@
             $('#inventory-detail-modal').iziModal('open');
 
         }
+
+        function deleteInventory(unit_id){
+            console.log('hehe '+ unit_id);
+            iziToast.show({
+                theme: 'light',
+                icon: 'icon-money',
+                title: 'Hey',
+                message: 'Apakah anda yakin ingin menghapus?',
+                position: 'center', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+                progressBarColor: 'rgb(0, 255, 184)',
+                color : 'blue',
+                buttons: [
+                    ['<button>Ya</button>', function (instance, toast) {
+
+                        $('#delete-form input[name=inventory_id]').val(unit_id);
+                        $('#delete-form').submit();
+
+
+                    }, true], // true to focus
+                    ['<button>Batalkan</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'fadeOutUp',
+                            onClosing: function(instance, toast, closedBy){
+                                console.info('closedBy: ' + closedBy); // The return will be: 'closedBy: buttonName'
+                            }
+                        }, toast, 'buttonName');
+                    }]
+                ]
+            });
+        }
+
         $(document).ready(function(){
 
             var datatables = $('#itemsTable').DataTable({
@@ -95,7 +128,7 @@
                         for(let i = 0; i<len; i++){
                             ref[i]['action'] =
                                 '<button class="submit btn btn-success" type="submit" onclick="loadInventoryDetail('+ref[i].id+')">Detail</button>' +
-                                '<button class="submit btn btn-danger" style="background-color: #BB281A;" type="submit" onclick="deleteInventory('+ref[i].id+')">' +
+                                '<button class="submit btn btn-danger" style="background-color: #BB281A;" onclick="deleteInventory('+ref[i].id+')">' +
                                 '<i class="fas fa-trash"></i>' +
                                 '</button>'
 
@@ -204,7 +237,9 @@
 </head>
 <body>
 <button class="btn btn-success" id="itemBtn">Create Item</button>
-
+<form id="delete-form" method="post" action="/inventory/inventory/delete">
+    <input type="hidden" name="inventory_id">
+</form>
 <div id="create-item-modal" style="display: none">
     <div class="modal-body">
         <form id="create-item-form" action="/inventory/inventory/create" method="POST" enctype="multipart/form-data">

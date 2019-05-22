@@ -16,8 +16,8 @@ interface InventoryUnitRepository
     function findByCriteria(Criteria $request) : InventoryUnitPaginationResult;
 
     function findById(string $inventoryUnitId) : InventoryUnit;
-    function deleteById(string $inventoryUnitId);
+    function deleteById(string $inventoryUnitId) : bool;
     function createInventoryUnit(InventoryUnit $InventoryUnitUnit) : InventoryUnit;
-    function updateInventoryUnit(InventoryUnit $inventoryUnit) : bool;
+//    function updateInventoryUnit(InventoryUnit $inventoryUnit) : bool;
 
 }

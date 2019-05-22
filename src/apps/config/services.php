@@ -9,6 +9,7 @@ use Core\Modules\Inventory\Commands\GetInventoryTableCommand;
 use Core\Modules\Inventory\Commands\GetInventoryUnitTableCommand;
 use Core\Modules\Inventory\Commands\SearchCategoriesCommand;
 use Core\Modules\Inventory\Commands\SearchInventoriesCommand;
+use Core\Modules\Inventory\Commands\SearchItemWarehouseCommand;
 use Core\Modules\Inventory\Commands\SearchWarehousesCommand;
 use Core\Modules\Inventory\Services\InventoryService;
 use Core\Modules\Inventory\Services\InventoryUnitService;
@@ -172,6 +173,7 @@ $di->setShared('commands', function()use($di){
     $container->add(new GetInventoryUnitTableCommand($inventoryUnitRepository));
     $container->add(new SearchWarehousesCommand($warehouseRepository));
     $container->add(new SearchInventoriesCommand($inventoryRepository));
+    $container->add(new SearchItemWarehouseCommand($inventoryUnitRepository));
     return $container;
 });
 

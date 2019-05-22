@@ -25,12 +25,6 @@ class SearchCategoriesCommand
         $this->repository = $repository;
     }
 
-    private function mapToSearchResult(Category $result){
-        return [
-            'id' => $result->getId(),
-            'text' => $result->getName()
-        ];
-    }
 
     public function execute(SearchRequest $request)
     {

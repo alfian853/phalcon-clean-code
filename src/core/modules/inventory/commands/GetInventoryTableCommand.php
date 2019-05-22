@@ -42,6 +42,7 @@ class GetInventoryTableCommand
         switch ($orderBy){
             case 'category':
                 $criteria->setOrderBy(new EntityField(Category::class,'name'));
+                break;
             default:
                 $criteria->setOrderBy(new EntityField(Inventory::class, $orderBy), $request->getOrderDir());
         }

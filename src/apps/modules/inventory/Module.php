@@ -1,9 +1,9 @@
 <?php
 namespace App\Inventory;
-use App\Inventory\Repositories\InventoryRepository;
+use App\Library\Utils\AppInvoicePdfGenerator;
 use App\Library\Utils\AppItemDetailPdfGenerator;
-use App\Library\Utils\ViewWrapper;
-use Core\Modules\Inventory\Commands\SendInventoryPdfCommand;
+use Core\Modules\Inventory\Commands\GetInventoryPdfUrlCommand;
+use Core\Modules\Inventory\Commands\GetInvoicePdfUrlCommand;
 use Phalcon\DiInterface;
 use Phalcon\Loader;
 use Phalcon\Mvc\ModuleDefinitionInterface;
@@ -72,13 +72,21 @@ class Module implements ModuleDefinitionInterface
 
         $di['itemPdfGenerator'] = function () use($di) {
             $pdfGenerator = new AppItemDetailPdfGenerator($di->get('simpleView'));
-            $pdfGenerator->setViewPath("inventory_pdf_template");
+            return $pdfGenerator;
+        };
+
+        $di['invoicePdfGenerator'] = function () use($di) {
+            $pdfGenerator = new AppInvoicePdfGenerator($di->get('simpleView'));
             return $pdfGenerator;
         };
 
         $di->get('commands')->add(
-            new SendInventoryPdfCommand($di->get("itemPdfGenerator"),$di->get("inventoryUnitRepository"))
+            new GetInventoryPdfUrlCommand($di->get("itemPdfGenerator"),$di->get("inventoryUnitRepository"))
         );
+        $di->get('commands')->add(
+            new GetInvoicePdfUrlCommand($di->get("invoicePdfGenerator"),$di->get("inventoryUnitRepository"))
+        );
+
 
 
     }

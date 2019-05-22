@@ -53,8 +53,9 @@ class InventoryController extends Controller
         $response->send();
     }
 
-    public function heheAction(){
-        return $this->view->pick("tes_pdf.volt");
+    public function deleteAction() {
+        $this->inventoryService->deleteInventory($this->request->getPost('inventory_id'));
+        $this->response->redirect('/inventory/inventory')->send();
     }
 
     public function manaAction(){

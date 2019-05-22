@@ -32,7 +32,6 @@ class InventoryUnitService
 
 
     public function createInventoryUnit(InventoryUnitRequest $request){
-
         $inventory = $this->inventoryRepository->findById($request->getInventoryId());
         if($inventory == null){
             throw new \Exception("inventory not found",404);
@@ -48,7 +47,6 @@ class InventoryUnitService
         $unit->setWarehouse($warehouse);
 
         $success = $this->inventoryUnitRepository->createInventoryUnit($unit) != false;
-
         if($success){
             $inventory->setQuantity($inventory->getQuantity()+1);
             $this->inventoryRepository->updateInventory($inventory);
@@ -56,6 +54,13 @@ class InventoryUnitService
     }
 
     public function deleteInventoryUnit(string $unitId){
+        $unit = $this->inventoryUnitRepository->findById($unitId);
+        $inventory = $unit->getInventory();
+        $success = $this->inventoryUnitRepository->deleteById($unitId);
+        if($success){
+            $inventory->setQuantity($inventory->getQuantity()-1);
+            $this->inventoryRepository->updateInventory($inventory);
+        }
 
     }
 }
