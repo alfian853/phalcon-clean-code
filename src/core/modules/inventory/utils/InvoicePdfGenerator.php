@@ -9,7 +9,7 @@
 namespace Core\Modules\Inventory\Utils;
 
 
-use Core\Modules\Inventory\Orm\ListOfInventoryUnit;
+use Core\Modules\Inventory\Entities\ListOfInventoryUnit;
 
 interface InvoicePdfGenerator
 {

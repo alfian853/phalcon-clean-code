@@ -8,7 +8,6 @@ use Core\Library\Repositories\EntityField;
 use Core\Library\Repositories\ListOfSearchCriteria;
 use Core\Library\Repositories\SearchCriteria;
 use Core\Library\Requests\SearchRequest;
-use Core\Modules\Inventory\Entities\Inventory;
 use Core\Modules\Inventory\Entities\Warehouse;
 use Core\Modules\Inventory\Orm\WarehouseRepository;
 

@@ -11,8 +11,6 @@ use Core\Library\Requests\DataTableRequest;
 use Core\Modules\Inventory\Entities\Category;
 use Core\Modules\Inventory\Entities\Inventory;
 use Core\Modules\Inventory\Orm\InventoryRepository;
-use Core\Modules\Inventory\Requests\InventoryColumnEnum;
-use Core\Modules\Inventory\Requests\InventoryTablesRequest;
 
 class GetInventoryTableCommand
 {

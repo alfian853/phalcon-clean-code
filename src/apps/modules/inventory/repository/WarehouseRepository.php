@@ -51,18 +51,4 @@ class WarehouseRepository extends AbstractRepository implements CoreWarehouseRep
         );
     }
 
-    function deleteById(int $warehouseId)
-    {
-        // TODO: Implement deleteById() method.
-    }
-
-    function createWarehouse(CoreWarehouse $warehouse): CoreWarehouse
-    {
-        // TODO: Implement createWarehouse() method.
-    }
-
-    function updateWarehouse(CoreWarehouse $warehouse): bool
-    {
-        // TODO: Implement updateWarehouse() method.
-    }
 }

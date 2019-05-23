@@ -9,7 +9,7 @@
 namespace App\Library\Utils;
 
 
-use Core\Modules\Inventory\Orm\ListOfInventoryUnit;
+use Core\Modules\Inventory\Entities\ListOfInventoryUnit;
 use Core\Modules\Inventory\Utils\InvoicePdfGenerator;
 use Dompdf\Dompdf;
 use Phalcon\Mvc\Url;

@@ -3,7 +3,7 @@
 namespace Core\Library\Repositories;
 
 
-use Core\Modules\Inventory\Orm\InventoryPaginationResult;
+use Core\Modules\Inventory\Entities\InventoryPaginationResult;
 
 interface CriteriaRepositoryInterface
 {

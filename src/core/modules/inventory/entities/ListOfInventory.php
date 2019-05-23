@@ -1,8 +1,6 @@
 <?php
 
-namespace Core\Modules\Inventory\Orm;
-
-use Core\Modules\Inventory\Entities\Inventory;
+namespace Core\Modules\Inventory\Entities;
 
 class ListOfInventory
 {

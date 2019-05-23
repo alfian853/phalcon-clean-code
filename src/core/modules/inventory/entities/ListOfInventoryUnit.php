@@ -6,7 +6,7 @@
  * Time: 11:44 AM
  */
 
-namespace Core\Modules\Inventory\Orm;
+namespace Core\Modules\Inventory\Entities;
 
 
 use Core\Modules\Inventory\Entities\InventoryUnit;

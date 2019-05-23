@@ -8,7 +8,6 @@
 
 namespace Core\Modules\Inventory\Orm;
 
-
 use Core\Modules\Inventory\Entities\InventoryUnit;
 
 class InventoryUnitPaginationResult

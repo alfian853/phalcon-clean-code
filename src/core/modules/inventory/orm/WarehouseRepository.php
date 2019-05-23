@@ -16,8 +16,5 @@ interface WarehouseRepository
     function findByCriteria(Criteria $criteria) : WarehousePaginationResult;
 
     function findById(int $warehouseId) : Warehouse;
-    function deleteById(int $warehouseId);
-    function createWarehouse(Warehouse $warehouse) : Warehouse;
-    function updateWarehouse(Warehouse $warehouse) : bool;
 
 }

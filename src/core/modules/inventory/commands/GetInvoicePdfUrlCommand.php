@@ -10,7 +10,7 @@ namespace Core\Modules\Inventory\Commands;
 
 
 use Core\Modules\Inventory\Orm\InventoryUnitRepository;
-use Core\Modules\Inventory\Orm\ListOfInventoryUnit;
+use Core\Modules\Inventory\Entities\ListOfInventoryUnit;
 use Core\Modules\Inventory\Requests\CreateInvoiceRequest;
 use Core\Modules\Inventory\Utils\InvoicePdfGenerator;
 use DateTime;

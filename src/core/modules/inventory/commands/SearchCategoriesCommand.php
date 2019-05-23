@@ -3,7 +3,6 @@
 namespace Core\Modules\Inventory\Commands;
 
 use Core\Library\Repositories\Criteria;
-use Core\Library\Repositories\CriteriaRepositoryInterface;
 use Core\Library\Repositories\EntityField;
 use Core\Library\Repositories\ListOfSearchCriteria;
 use Core\Library\Repositories\SearchCriteria;
