@@ -166,3 +166,4 @@ $RECYCLE.BIN/
 
 *.env
 private.key
+src/public/invoices

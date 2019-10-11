@@ -14,7 +14,8 @@ return new Config(
         'mode' => 'DEVELOPMENT', //DEVELOPMENT, PRODUCTION, DEMO
 
         'database' => [
-            'adapter' => 'Phalcon\Db\Adapter\Pdo\Postgresql',
+            'adapter' => 'Phalcon\Db\Adapter\Pdo\Mysql',
+//            'adapter' => 'Phalcon\Db\Adapter\Pdo\Postgresql',
             'host' => getenv("DB_HOST"),
             'port' => getenv("DB_PORT"),
             'username' => getenv("DB_USERNAME"),
@@ -23,7 +24,7 @@ return new Config(
         ],   
 
         'url' => [
-            'baseUrl' => 'http://localhost:8008/',
+            'baseUrl' => 'http://192.168.16.73:8008/',
         ],
         
         'application' => [

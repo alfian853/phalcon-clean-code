@@ -134,7 +134,7 @@ $di->setShared('db', function() use ($di) {
         $connection =  new \Phalcon\Db\Adapter\Pdo\Mysql($creds);
     }
     else if($type == 'Phalcon\Db\Adapter\Pdo\Postgresql'){
-        $connection =  new \Phalcon\Db\Adapter\Pdo\Postgresql($creds);
+//        $connection =  new \Phalcon\Db\Adapter\Pdo\Postgresql($creds);
     }
     else {
         throw new Exception('Bad Database Adapter');

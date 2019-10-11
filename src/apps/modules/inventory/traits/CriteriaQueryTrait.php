@@ -34,8 +34,12 @@ trait CriteriaQueryTrait
         /** @var SearchCriteria $search */
         foreach ($criteria->getSearchList()->getList() as $search){
             $field = $this->getFieldFromColumn($search->getEntityField());
-            $builder->andWhere('cast('.$field.'.'.
-                $search->getEntityField()->getField().' as TEXT) like \'%'.$search->getData().'%\'');
+//          for postgresql
+//            $builder->andWhere('cast('.$field.'.'.
+//                $search->getEntityField()->getField().' as TEXT) like \'%'.$search->getData().'%\'');
+            // for mysql
+            $builder->andWhere(''.$field.'.'.
+                $search->getEntityField()->getField().' like \'%'.$search->getData().'%\'');
         }
         if($criteria->getOrderBy()){
             $builder->orderBy($this->getFieldFromColumn(
